@@ -1,8 +1,8 @@
-"""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""
 " UI
 """""""""""""""""""""""""""""""""""""""""""""""""
 set number
-set ruler
+set guicursor=v-c-sm:block,n-i-ci-ve:ver25,r-cr-o:hor20
 
 """""""""""""""""""""""""""""""""""""""""""""""""
 " Text, tab, and indent related settings.
@@ -14,4 +14,9 @@ set expandtab
 set shiftwidth=4
 set tabstop=4
 
+" Enable mouse support
 set mouse=a
+
+" Text cursor line wrapping
+set whichwrap=<,>,[,]
+
