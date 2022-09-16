@@ -1,0 +1,1 @@
+[Original formatter settings](https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml)
