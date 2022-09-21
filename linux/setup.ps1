@@ -34,49 +34,49 @@ $Commands = @{
         "sudo apt update && sudo apt upgrade -y",
         "sudo apt install -y htop neofetch neovim httpie git flatpak gnome-software-plugin-flatpak",
         "flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo",
-        "flatpak install flathub com.github.tchx84.Flatseal",
-        "flatpak install flathub com.google.Chrome",
-        "flatpak install flathub com.visualstudio.code",
-        "flatpak install flathub com.discordapp.Discord",
-        "flatpak install flathub org.polymc.PolyMC",
-        "flatpak install flathub org.gimp.GIMP",
-        "flatpak install flathub org.kde.kdenlive"
+        "flatpak install flathub -y com.github.tchx84.Flatseal",
+        "flatpak install flathub -y com.google.Chrome",
+        "flatpak install flathub -y com.visualstudio.code",
+        "flatpak install flathub -y com.discordapp.Discord",
+        "flatpak install flathub -y org.polymc.PolyMC",
+        "flatpak install flathub -y org.gimp.GIMP",
+        "flatpak install flathub -y org.kde.kdenlive"
     )
     Kubuntu = @(
         "sudo apt update && sudo apt upgrade -y",
         "sudo apt install -y htop neofetch neovim httpie git flatpak plasma-discover-flatpak-backend",
         "flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo",
-        "flatpak install flathub com.github.tchx84.Flatseal",
-        "flatpak install flathub com.google.Chrome",
-        "flatpak install flathub com.visualstudio.code",
-        "flatpak install flathub com.discordapp.Discord",
-        "flatpak install flathub org.polymc.PolyMC",
-        "flatpak install flathub org.gimp.GIMP",
-        "flatpak install flathub org.kde.kdenlive"
+        "flatpak install flathub -y com.github.tchx84.Flatseal",
+        "flatpak install flathub -y com.google.Chrome",
+        "flatpak install flathub -y com.visualstudio.code",
+        "flatpak install flathub -y com.discordapp.Discord",
+        "flatpak install flathub -y org.polymc.PolyMC",
+        "flatpak install flathub -y org.gimp.GIMP",
+        "flatpak install flathub -y org.kde.kdenlive"
     )
     Fedora = @(
         "sudo dnf upgrade -y",
         "sudo dnf install -y htop neofetch neovim httpie git",
         "flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo",
-        "flatpak install flathub com.github.tchx84.Flatseal",
-        "flatpak install flathub com.google.Chrome",
-        "flatpak install flathub com.visualstudio.code",
-        "flatpak install flathub com.discordapp.Discord",
-        "flatpak install flathub org.polymc.PolyMC",
-        "flatpak install flathub org.gimp.GIMP",
-        "flatpak install flathub org.kde.kdenlive"
+        "flatpak install flathub -y com.github.tchx84.Flatseal",
+        "flatpak install flathub -y com.google.Chrome",
+        "flatpak install flathub -y com.visualstudio.code",
+        "flatpak install flathub -y com.discordapp.Discord",
+        "flatpak install flathub -y org.polymc.PolyMC",
+        "flatpak install flathub -y org.gimp.GIMP",
+        "flatpak install flathub -y org.kde.kdenlive"
     )
     RPi = @(
         "sudo apt update && sudo apt upgrade -y",
         "sudo apt install -y htop neofetch neovim httpie flatpak git",
         "flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo",
-        "flatpak install flathub com.github.tchx84.Flatseal",
-        "flatpak install flathub com.google.Chrome",
-        "flatpak install flathub com.visualstudio.code",
-        "flatpak install flathub com.discordapp.Discord",
-        "flatpak install flathub org.polymc.PolyMC",
-        "flatpak install flathub org.gimp.GIMP",
-        "flatpak install flathub org.kde.kdenlive"
+        "flatpak install flathub -y com.github.tchx84.Flatseal",
+        "flatpak install flathub -y com.google.Chrome",
+        "flatpak install flathub -y com.visualstudio.code",
+        "flatpak install flathub -y com.discordapp.Discord",
+        "flatpak install flathub -y org.polymc.PolyMC",
+        "flatpak install flathub -y org.gimp.GIMP",
+        "flatpak install flathub -y org.kde.kdenlive"
     )
 }
 
