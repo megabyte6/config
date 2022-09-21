@@ -11,7 +11,7 @@ function Install-Debian {
         "sudo make dkms_install"
     )
     foreach ($SelectedCommand in $Commands) {
-        Invoke-Command $SelectedCommand
+        Invoke-Expression $SelectedCommand
     }
 }
 
@@ -24,7 +24,7 @@ function Install-RHEL {
         "sudo make dkms_install"
     )
     foreach ($SelectedCommand in $Commands) {
-        Invoke-Command $SelectedCommand
+        Invoke-Expression $SelectedCommand
     }
 }
 

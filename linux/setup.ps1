@@ -91,7 +91,7 @@ function Invoke-Text {
     if ($NoInstall) {
         Write-Output $Command
     } else {
-        Invoke-Command $Command
+        Invoke-Expression $Command
     }
 }
 
