@@ -2,7 +2,7 @@
 " UI
 """""""""""""""""""""""""""""""""""""""""""""""""
 set number
-set guicursor=v-c-sm:block,n-i-ci-ve:ver25,r-cr-o:hor20
+" set guicursor=v-c-sm:block,n-i-ci-ve:ver25,r-cr-o:hor20
 
 """""""""""""""""""""""""""""""""""""""""""""""""
 " Text, tab, and indent related settings.
