@@ -1,4 +1,4 @@
-""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""
 " UI
 """""""""""""""""""""""""""""""""""""""""""""""""
 set number
@@ -19,4 +19,16 @@ set mouse=a
 
 " Text cursor line wrapping
 set whichwrap=<,>,[,]
+
+"""""""""""""""""""""""""""""""""""""""""""""""""
+" Editor settings.
+"""""""""""""""""""""""""""""""""""""""""""""""""
+" Use more natural pane splitting.
+set splitbelow
+set splitright
+
+nnoremap <A-UP> <C-W><C-K>
+nnoremap <A-DOWN> <C-W><C-J>
+nnoremap <A-LEFT> <C-W><C-H>
+nnoremap <A-RIGHT> <C-W><C-L>
 
