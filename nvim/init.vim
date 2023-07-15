@@ -31,4 +31,3 @@ nnoremap <A-UP> <C-W><C-K>
 nnoremap <A-DOWN> <C-W><C-J>
 nnoremap <A-LEFT> <C-W><C-H>
 nnoremap <A-RIGHT> <C-W><C-L>
-

@@ -189,29 +189,3 @@ function pgrep {
 
     Get-Process $Name
 }
-
-# Add wsl aliases.
-#function python3 {
-#    param (
-#        [Parameter(ValueFromRemainingArguments = $true)][string[]]$PythonArgs
-#    )
-#
-#    # Replace the backslashes with forward slashes in the file name.
-#    if ($PythonArgs.Length -ge 1) {
-#        $PythonArgs[0] = $PythonArgs[0] -replace '[\\]', '/'
-#    }
-#
-#    wsl python3 $PythonArgs
-#}
-#New-Alias -Name py -Value python3
-
-#function pip3 {
-#    param (
-#        [Parameter(ValueFromRemainingArguments = $true)][string[]]$PipArgs
-#    )
-#
-#    wsl pip3 $PipArgs
-#}
-#New-Alias -Name pip -Value pip3
-
-oh-my-posh init pwsh | Invoke-Expression
