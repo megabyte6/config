@@ -6,7 +6,8 @@
 ## linux
 | File | Description | Notes |
 | --- | --- | --- |
-| [setup.ps1](https://raw.githubusercontent.com/megabyte6/config/main/linux.setup.ps1) | For setting up new linux installations. |
+| [setup.py](https://raw.githubusercontent.com/megabyte6/config/main/linux/setup.py) | For setting up new linux installations. |  |
+| ~~[setup.ps1](https://raw.githubusercontent.com/megabyte6/config/main/archive/linux/setup.ps1)~~ | For setting up new linux installations. | **Not maintained** |
 | ~~[ugreen-driver.ps1](https://raw.githubusercontent.com/megabyte6/config/main/archive/linux/ugreen-driver.ps1)~~ | For installing the drivers for ugreen wifi adapter. | **Not maintained** |
 
 ## nvim
