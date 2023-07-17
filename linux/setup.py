@@ -106,7 +106,7 @@ parser = argparse.ArgumentParser(
     description="A setup script used to set up or update a Linux OS after installing."
 )
 
-parser.add_argument("os", choices=list(os_commands.keys()), help=f"the OS to target")
+parser.add_argument("os", choices=os_commands, help=f"the OS to target")
 parser.add_argument(
     "--only-upgrade",
     action="store_true",
