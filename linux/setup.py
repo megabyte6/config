@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-import sys
-import os
+import argparse
+import subprocess
 
 flatpak_setup = [
     "flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo",
@@ -18,7 +18,7 @@ flatpak_setup = [
     "flatpak install flathub -y com.protonvpn.www",
 ]
 
-commands = {
+os_commands = {
     "ubuntu": {
         "upgrade": [
             "sudo apt update",
@@ -27,6 +27,11 @@ commands = {
         "setup": [
             "sudo apt install -y htop neofetch neovim git httpie nala flatpak gnome-software-plugin-flatpak",
             *flatpak_setup,
+        ],
+        "terminal games": [
+            "sudo apt install -y bastet pacman4console nsnake 2048 nudoku moon-buggy ninvaders greed bsdgames",
+            "sudo apt install -y snapd",
+            "snap install ascii-patrol",
         ],
     },
     "kubuntu": {
@@ -38,6 +43,11 @@ commands = {
             "sudo apt install -y htop neofetch neovim git httpie nala flatpak plasma-discover-backend-flatpak",
             *flatpak_setup,
         ],
+        "terminal games": [
+            "sudo apt install -y bastet pacman4console nsnake 2048 nudoku moon-buggy ninvaders greed bsdgames",
+            "sudo apt install -y snapd",
+            "snap install ascii-patrol",
+        ],
     },
     "raspberry pi os": {
         "upgrade": [
@@ -48,6 +58,11 @@ commands = {
             "sudo apt install -y htop neofetch neovim git httpie nala flatpak",
             *flatpak_setup,
         ],
+        "terminal games": [
+            "sudo apt install -y bastet pacman4console nsnake 2048 nudoku moon-buggy ninvaders greed bsdgames",
+            "sudo apt install -y snapd",
+            "snap install ascii-patrol",
+        ],
     },
     "fedora": {
         "upgrade": [
@@ -56,6 +71,11 @@ commands = {
         "setup": [
             "sudo dnf install -y htop neofetch neovim git httpie",
             *flatpak_setup,
+        ],
+        "terminal games": [
+            "sudo dnf install -y bastet pacman4console nsnake 2048-cli nudoku moon-buggy ninvaders greed bsdgames",
+            "sudo dnf install -y snapd",
+            "snap install ascii-patrol",
         ],
     },
     "opensuse": {
@@ -66,105 +86,68 @@ commands = {
             "sudo zypper install -y htop neofetch neovim git httpie flatpak",
             *flatpak_setup,
         ],
+        "terminal games": [
+            "echo No games listed for openSUSE",
+        ],
     },
 }
 
 
-def print_help():
-    print(
-        f"""
-A setup script used to set up or update a Linux OS after installing.
-
-Usage:
-    ./setup.py <[--os] <String>> [--upgrade] [--setup] [--no-install]
-    ./setup.py --help
-
-Options:
-    --os <os>: The OS to target.
-        can be one of {list(commands.keys())}
-    --upgrade: Update/upgrade the OS.
-    --setup: Setup the OS and install packages and apps.
-
-Example:
-    ./setup.py --os ubuntu --action upgrade
-    ./setup.py "raspberry pi os"
-    ./setup.py --os fedora --action setup --no-install
-        """
-    )
-
-
-def invalid_argument(message: str):
-    print(message)
-    print("Try './setup.py --help' for more information.")
-    sys.exit(0)
-
-
-def update_os():
-    for command in commands[arguments["--os"]]["upgrade"]:
-        if arguments["--no-install"]:
+def execute_commands(commands: list, no_install: bool = False):
+    if no_install:
+        for command in commands:
             print(command)
-        else:
-            os.system(command)
-
-
-def setup_os():
-    # Make sure the OS us updated before setup
-    update_os()
-
-    for command in commands[arguments["--os"]]["setup"]:
-        if arguments["--no-install"]:
-            print(command)
-        else:
-            os.system(command)
-
-
-arguments = {
-    "--os": None,
-    "--action": "help",
-    "-—no-install": False,
-}
-
-if len(sys.argv) == 1:
-    invalid_argument("Missing target OS")
-
-for i, arg in enumerate(sys.argv):
-    # Skip first argument because it is the script name
-    if i == 0:
-        continue
-
-    if arg == "-h" or arg == "--help":
-        print_help()
-        sys.exit(0)
-
-    if arg == "--os":
-        if i + 1 >= len(sys.argv):
-            invalid_argument("No OS specified after '--os' flag.")
-        arguments["--os"] = sys.argv[i + 1]
-    elif arg == "-s" or arg == "--setup":
-        arguments["--action"] = "setup"
-    elif arg == "-u" or arg == "--upgrade":
-        arguments["--action"] = "upgrade"
-    elif arg == "--no-install":
-        arguments["--no-install"] = True
     else:
-        # If no flag is passed, assume it is the OS to target
-        arguments["--os"] = arg
+        for command in commands:
+            subprocess.run(command)
 
-# Perform some checks on the arguments passed
-if arguments["--os"] is None:
-    invalid_argument("No OS specified")
 
-arguments["--os"] = arguments["--os"].lower()
+parser = argparse.ArgumentParser(
+    description="A setup script used to set up or update a Linux OS after installing."
+)
 
-if arguments["--no-install"]:
+parser.add_argument("os", choices=list(os_commands.keys()), help=f"the OS to target")
+parser.add_argument(
+    "--only-upgrade",
+    action="store_true",
+    help="only update/upgrade the OS and do not install setup packages and apps",
+)
+parser.add_argument(
+    "--install-terminal-games", action="store_true", help="install fun terminal games"
+)
+parser.add_argument(
+    "--no-install",
+    action="store_true",
+    help="list what commands would be run but do not install any packages or apps",
+)
+
+args = parser.parse_args()
+
+# Perform some preprocessing on the arguments passed
+args.os = args.os.lower()
+
+if args.no_install:
     print(
         "No installation will be performed. But here are the commands that would be run:",
         end="\n\n",
     )
 
-# Run the commands
-if arguments["--action"] == "upgrade":
-    update_os()
-else:
-    # The default action is 'setup'
-    setup_os()
+# Run update/upgrade command regardless of the arguments passed as all cases
+# require this to be run
+execute_commands(
+    commands=os_commands[args.os]["upgrade"],
+    no_install=args.no_install,
+)
+
+# Run setup command only if '--only-upgrade' was not passed
+if not args.only_upgrade:
+    execute_commands(
+        commands=os_commands[args.os]["setup"],
+        no_install=args.no_install,
+    )
+
+if args.install_terminal_games:
+    execute_commands(
+        commands=os_commands[args.os]["terminal games"],
+        no_install=args.no_install,
+    )
