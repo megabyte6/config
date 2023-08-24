@@ -19,10 +19,22 @@ def add_scripts(server_name):
 #!/usr/bin/env python3
 
 import argparse
+import json
 import os
 import sys
+from urllib.request import urlopen
 
-import requests
+
+def fetch_json(url):
+    \"""
+    Fetch and parse JSON from a given URL.
+    :param url: The URL to fetch JSON from.
+    :return: The parsed JSON.
+    \"""
+
+    with urlopen(url) as response:
+        return json.load(response)
+
 
 parser = argparse.ArgumentParser(description="Update a PaperMC Minecraft server.")
 parser.add_argument(
@@ -47,12 +59,12 @@ args = parser.parse_args()
 # Find the latest Minecraft version if it is not specified.
 if args.mc_version == "-1":
     mc_versions_url = "https://api.papermc.io/v2/projects/paper"
-    args.mc_version = requests.get(mc_versions_url).json()["versions"][-1]
+    args.mc_version = fetch_json(mc_versions_url)["versions"][-1]
 
 # Find the latest PaperMC build if it is not specified.
 if args.papermc_build == -1:
     papermc_builds_url = f"https://api.papermc.io/v2/projects/paper/versions/{args.mc_version}/builds"
-    args.papermc_build = requests.get(papermc_builds_url).json()["builds"][-1]["build"]
+    args.papermc_build = fetch_json(papermc_builds_url)["builds"][-1]["build"]
 
 
 # Check if the user wants to know both or just the latest Minecraft version or the latest PaperMC build.
@@ -68,7 +80,7 @@ if args.check_latest:
 
 # Find JAR name for download link.
 jar_url = f"https://api.papermc.io/v2/projects/paper/versions/{args.mc_version}/builds/{args.papermc_build}"
-jar_name = requests.get(jar_url).json()["downloads"]["application"]["name"]
+jar_name = fetch_json(jar_url)["downloads"]["application"]["name"]
 
 download_url = f"https://api.papermc.io/v2/projects/paper/versions/{args.mc_version}/builds/{args.papermc_build}/downloads/{jar_name}"
 
@@ -83,8 +95,8 @@ for file in os.listdir():
         os.remove(file)
 
 # Download the latest build of PaperMC.
-with open(jar_name, "wb") as f:
-    f.write(requests.get(download_url).content)
+with urlopen(download_url) as response, open(jar_name, "wb") as f:
+    f.write(response.read())
 """.lstrip(
         "\n"
     )
@@ -111,7 +123,9 @@ subprocess.run(["java", "-Xms512M", "-Xmx4G", "-jar", papermc_jar, "nogui"])
 """.format(
         mc_version=subprocess.run(
             [os.path.join(".", server_name, "update.py"), "--check-latest", "mc-version"], stdout=subprocess.PIPE
-        ).stdout.decode().strip()
+        )
+        .stdout.decode()
+        .strip()
     ).lstrip(
         "\n"
     )
