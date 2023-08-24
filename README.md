@@ -18,10 +18,10 @@
 ## minecraft-server
 | File | Description | Notes |
 | --- | --- | --- |
-| ~~[server.ps1](https://raw.githubusercontent.com/megabyte6/config/main/archive/minecraft-server/server.ps1)~~ | A PowerShell script used to automate the setup and backup processes of a Minecraft Java server set up with PaperMC. | **Not maintained** |
-| ~~[tmux.ps1](https://raw.githubusercontent.com/megabyte6/config/main/archive/minecraft-server/tmux.ps1)~~ | A PowerShell script used to manage `tmux` sessions for Minecraft servers. | **Not maintained** |
 | [server.py](https://raw.githubusercontent.com/megabyte6/config/main/minecraft-server/server.py) | A Python script used to automate the setup and backup processes of a Minecraft Java server set up with PaperMC. |  |
 | [tmux.py](https://raw.githubusercontent.com/megabyte6/config/main/minecraft-server/tmux.py) | A Python script used to mange `tmux` sessions for Minecraft servers. |  |
+| ~~[server.ps1](https://raw.githubusercontent.com/megabyte6/config/main/archive/minecraft-server/server.ps1)~~ | A PowerShell script used to automate the setup and backup processes of a Minecraft Java server set up with PaperMC. | **Not maintained** |
+| ~~[tmux.ps1](https://raw.githubusercontent.com/megabyte6/config/main/archive/minecraft-server/tmux.ps1)~~ | A PowerShell script used to manage `tmux` sessions for Minecraft servers. | **Not maintained** |
 
 ## powershell
 | File | Description |
