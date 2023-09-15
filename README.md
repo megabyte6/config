@@ -24,9 +24,9 @@
 | ~~[tmux.ps1](https://raw.githubusercontent.com/megabyte6/config/main/archive/minecraft-server/tmux.ps1)~~ | A PowerShell script used to manage `tmux` sessions for Minecraft servers. | **Not maintained** |
 
 ## powershell
-| File | Description |
-| --- | --- |
-| [Microsoft.PowerShell_profile.ps1](https://raw.githubusercontent.com/megabyte6/config/main/powershell/Microsoft.PowerShell_profile.ps1) | PowerShell configuration. Should be located at `C:\Users\<user name>\Documents\PowerShell\Microsoft.PowerShell_profile.ps1` |
+| File | Description | Notes |
+| --- | --- | --- |
+| ~~[Microsoft.PowerShell_profile.ps1](https://raw.githubusercontent.com/megabyte6/config/main/powershell/Microsoft.PowerShell_profile.ps1)~~ | PowerShell configuration. Should be located at `C:\Users\<user name>\Documents\PowerShell\Microsoft.PowerShell_profile.ps1` | **Not maintained** |
 
 ## ubuntu
 | File | Description | Notes |
