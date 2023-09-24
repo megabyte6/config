@@ -1,5 +1,25 @@
 #!/usr/bin/env python
 
+"""
+Script Name: server.py
+Author: Brayden Chan
+Date Created: 2023-08-24
+Date Modified: 2023-09-24
+Description: A script to setup and manage Minecraft servers.
+
+Dependencies:
+    - Python 3.6+
+    - Linux
+    - tmux
+
+Version: 1.1
+
+License: This file is licensed under the MIT License. See LICENSE for more information.
+
+Contact Information:
+    - GitHub: https://github.com/megabyte6
+"""
+
 from argparse import ArgumentParser
 from datetime import datetime
 from os import chdir, chmod, makedirs, stat
