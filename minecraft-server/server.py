@@ -26,7 +26,7 @@ from os import chdir, chmod, makedirs, stat
 from os.path import exists, join
 from stat import S_IEXEC
 from subprocess import PIPE, run
-from sys import exit
+from sys import executable, exit
 
 
 def add_scripts(server_name):
@@ -36,9 +36,14 @@ def add_scripts(server_name):
     :return: None
     """
 
-    update_script = """
-#!/usr/bin/env python
+    if executable.endswith("python3"):
+        python_executable = "python3"
+    else:
+        python_executable = "python"
 
+    update_script = (
+        f"#!/usr/bin/env {python_executable}"
+        + """
 from argparse import ArgumentParser
 from json import load
 from os import listdir, remove
@@ -124,7 +129,8 @@ for file in listdir():
 with urlopen(download_url) as response, open(jar_name, "wb") as f:
     f.write(response.read())
 """.lstrip(
-        "\n"
+            "\n"
+        )
     )
 
     update_script_path = join(server_name, "update.py")
@@ -133,8 +139,11 @@ with urlopen(download_url) as response, open(jar_name, "wb") as f:
     # Make the script executable.
     chmod(update_script_path, stat(update_script_path).st_mode | S_IEXEC)
 
-    start_script = """
-#!/usr/bin/env python
+    mc_version = (
+        run([join(".", server_name, "update.py"), "--check-latest", "mc-version"], stdout=PIPE).stdout.decode().strip()
+    )
+    start_script = f"""
+#!/usr/bin/env {python_executable}
 
 from glob import glob
 from os.path import join
@@ -146,11 +155,7 @@ run([join(".", "update.py"), "--mc-version", "{mc_version}"])
 # Start PaperMC.
 papermc_jar = glob("paper*.jar")[0]
 run(["java", "-Xms512M", "-Xmx4G", "-jar", papermc_jar, "nogui"])
-""".format(
-        mc_version=run([join(".", server_name, "update.py"), "--check-latest", "mc-version"], stdout=PIPE)
-        .stdout.decode()
-        .strip()
-    ).lstrip(
+""".lstrip(
         "\n"
     )
 
