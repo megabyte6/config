@@ -143,15 +143,64 @@ run(["java", "-Xms512M", "-Xmx4G", "-jar", papermc_jar, "nogui"])
 
 parser = ArgumentParser(description="Setup or backup a Minecraft server.")
 
-action_options = parser.add_mutually_exclusive_group(required=True)
-action_options.add_argument("-n", "--new", action="store_true", help="Create a new server")
-action_options.add_argument("-b", "--backup", action="store_true", help="Backup an existing server")
+server_options = parser.add_mutually_exclusive_group()
+server_options.add_argument(
+    "-s", "--session", action="store_true", help="Continue or start a Minecraft server's console session"
+)
+server_options.add_argument("-n", "--new", action="store_true", help="Create a new server")
+server_options.add_argument("-b", "--backup", action="store_true", help="Backup an existing server")
 
-parser.add_argument("server_name", help="The name of the Minecraft server to create or perform the action on")
+parser.add_argument(
+    "server_name", nargs="?", help="The name of the Minecraft server to create or perform the action on"
+)
+server_options.add_argument("-d", "--delete", action="store_true", help="Delete an existing server")
+
+parser.add_argument("--list-sessions", action="store_true", help="List all running Minecraft server sessions")
 
 args = parser.parse_args()
 
-if args.new:
+if args.list_sessions:
+    sessions = run(
+        [
+            "tmux",
+            "ls",
+            "-F",
+            "#{session_name}: #{session_windows} windows (created #{t:session_created}) (#{?session_attached,attached,not attached})",
+        ],
+        stdout=PIPE,
+        stderr=PIPE,
+    )
+    # No sessions found would result in an error.
+    if sessions.stderr.decode():
+        print("No sessions found.")
+    else:
+        print(sessions.stdout.decode())
+
+elif args.session:
+    # The tmux id should not contain any slashes.
+    if args.server_name[-1] in ["/", "\\"]:
+        args.server_name = args.server_name[:-1]
+    tmux_id = f"mc-{args.server_name}"
+
+    # Check if the server name given exists.
+    if not exists(args.server_name):
+        print(f"A server with the name '{args.server_name}' does not exist.")
+        if args.server_name.startswith("mc-"):
+            print(f"Did you mean './server.py -s {args.server_name[3:]}'?")
+        exit(1)
+
+    # Check if the server is already running.
+    tmux_sessions = run(["tmux", "ls"], stdout=PIPE, stderr=PIPE)
+    if tmux_id in tmux_sessions.stdout.decode():
+        run(["tmux", "attach", "-t", tmux_id])
+    else:
+        chdir(args.server_name)
+
+        # Use systemd-run to run tmux as a user process to prevent it from being killed when the user logs out.
+        # If this is a new server, run 'loginctl enable-linger' to allow the process to stay active even if all users log off.
+        run(["systemd-run", "--scope", "--user", "tmux", "new", "-s", tmux_id])
+
+elif args.new:
     # Check if the server given exists.
     if exists(args.server_name):
         print(f"A server with the name '{args.server_name}' already exists.")
@@ -183,3 +232,19 @@ elif args.backup:
 
     # Navigate back to the original directory.
     chdir("..")
+
+elif args.delete:
+    # Check if the server given exists.
+    if not exists(args.server_name):
+        print(f"A server with the name '{args.server_name}' does not exist.")
+        print("Please check the spelling and try again.")
+        exit(1)
+
+    confirm_delete = input(
+        f"Are you sure you want to delete '{args.server_name}'? This will delete the server backups as well. (y/N): "
+    )
+    if confirm_delete.lower() not in ["y", "yes"]:
+        exit(0)
+
+    # Delete the server directory.
+    run(["rm", "-rf", args.server_name])
