@@ -11,22 +11,23 @@
 | ~~[ugreen-driver.ps1](https://raw.githubusercontent.com/megabyte6/config/main/archive/linux/ugreen-driver.ps1)~~ | For installing the drivers for ugreen wifi adapter. | **Not maintained** |
 
 ## nvim
-| File | Description |
-| --- | --- |
-| [init.vim](https://raw.githubusercontent.com/megabyte6/config/main/nvim/init.vim) | My Neovim configuration. |
+| File | Description | Notes |
+| --- | --- | --- |
+| [NvChad config](https://github.com/megabyte6/config/blob/main/nvim/lua/custom) | My NvChad configuration. |  |
+| [init.vim](https://raw.githubusercontent.com/megabyte6/config/main/archive/nvim/init.vim) | My Neovim configuration. | **Not maintained** |
 
 ## minecraft-server
 | File | Description | Notes |
 | --- | --- | --- |
 | [server.py](https://raw.githubusercontent.com/megabyte6/config/main/minecraft-server/server.py) | A Python script used to simplify the management process of Minecraft Java servers running PaperMC. |  |
-| ~~[tmux.py](https://raw.githubusercontent.com/megabyte6/config/main/minecraft-server/tmux.py)~~ | A Python script used to mange `tmux` sessions for Minecraft servers. | **Not maintained**<br>Replaced by [server.py](https://raw.githubusercontent.com/megabyte6/config/main/minecraft-server/server.py) |
+| ~~[tmux.py](https://raw.githubusercontent.com/megabyte6/config/main/archive/minecraft-server/tmux.py)~~ | A Python script used to mange `tmux` sessions for Minecraft servers. | **Not maintained**<br>Replaced by [server.py](https://raw.githubusercontent.com/megabyte6/config/main/minecraft-server/server.py) |
 | ~~[server.ps1](https://raw.githubusercontent.com/megabyte6/config/main/archive/minecraft-server/server.ps1)~~ | A PowerShell script used to automate the setup and backup processes of a Minecraft Java server set up with PaperMC. | **Not maintained** |
 | ~~[tmux.ps1](https://raw.githubusercontent.com/megabyte6/config/main/archive/minecraft-server/tmux.ps1)~~ | A PowerShell script used to manage `tmux` sessions for Minecraft servers. | **Not maintained** |
 
 ## powershell
 | File | Description | Notes |
 | --- | --- | --- |
-| ~~[Microsoft.PowerShell_profile.ps1](https://raw.githubusercontent.com/megabyte6/config/main/powershell/Microsoft.PowerShell_profile.ps1)~~ | PowerShell configuration. Should be located at `C:\Users\<user name>\Documents\PowerShell\Microsoft.PowerShell_profile.ps1` | **Not maintained** |
+| ~~[Microsoft.PowerShell_profile.ps1](https://raw.githubusercontent.com/megabyte6/config/main/archive/powershell/Microsoft.PowerShell_profile.ps1)~~ | PowerShell configuration. Should be located at `C:\Users\<user name>\Documents\PowerShell\Microsoft.PowerShell_profile.ps1` | **Not maintained** |
 
 ## ubuntu
 | File | Description | Notes |
