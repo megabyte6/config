@@ -42,7 +42,7 @@ def add_scripts(server_name):
         python_executable = "python"
 
     update_script = (
-        f"#!/usr/bin/env {python_executable}"
+        f"#!/usr/bin/env {python_executable}\n\n"
         + """
 from argparse import ArgumentParser
 from json import load
@@ -175,6 +175,8 @@ server_options.add_argument(
 server_options.add_argument("-n", "--new", action="store_true", help="Create a new server")
 server_options.add_argument("-b", "--backup", action="store_true", help="Backup an existing server")
 
+parser.add_argument("-y", action="store_true", help="Answer yes to all prompts")
+
 parser.add_argument(
     "server_name", nargs="?", help="The name of the Minecraft server to create or perform the action on"
 )
@@ -265,10 +267,9 @@ elif args.delete:
         print("Please check the spelling and try again.")
         exit(1)
 
-    confirm_delete = input(
+    if not args.y and input(
         f"Are you sure you want to delete '{args.server_name}'? This will delete the server backups as well. (y/N): "
-    )
-    if confirm_delete.lower() not in ["y", "yes"]:
+    ).lower() not in ["y", "yes"]:
         exit(0)
 
     # Delete the server directory.
