@@ -248,3 +248,7 @@ elif args.delete:
 
     # Delete the server directory.
     run(["rm", "-rf", args.server_name])
+
+else:
+    parser.print_usage()
+    print("run with '-h' to get help")
