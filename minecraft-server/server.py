@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 
-import argparse
-import datetime
-import os
-import subprocess
-import sys
-import stat
+from argparse import ArgumentParser
+from datetime import datetime
+from os import chdir, chmod, makedirs, stat
+from os.path import exists, join
+from stat import S_IEXEC
+from subprocess import PIPE, run
+from sys import exit
 
 
 def add_scripts(server_name):
@@ -16,27 +17,32 @@ def add_scripts(server_name):
     """
 
     update_script = """
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
-import argparse
-import json
-import os
-import sys
+from argparse import ArgumentParser
+from json import load
+from os import listdir, remove
+from os.path import isfile
+from sys import exit
 from urllib.request import urlopen
 
 
-def fetch_json(url):
+def fetch_json(url: str):
     \"""
     Fetch and parse JSON from a given URL.
-    :param url: The URL to fetch JSON from.
-    :return: The parsed JSON.
+
+    Args:
+        url (str): The URL to fetch JSON from.
+
+    Returns:
+        The parsed JSON.
     \"""
 
     with urlopen(url) as response:
-        return json.load(response)
+        return load(response)
 
 
-parser = argparse.ArgumentParser(description="Update a PaperMC Minecraft server.")
+parser = ArgumentParser(description="Update a PaperMC Minecraft server.")
 parser.add_argument(
     "--mc-version",
     default="-1",
@@ -75,7 +81,7 @@ if args.check_latest:
         print(args.papermc_build)
     else:
         print(f"Latest build for Minecraft {args.mc_version} is version {args.papermc_build}")
-    sys.exit(0)
+    exit(0)
 
 
 # Find JAR name for download link.
@@ -85,14 +91,14 @@ jar_name = fetch_json(jar_url)["downloads"]["application"]["name"]
 download_url = f"https://api.papermc.io/v2/projects/paper/versions/{args.mc_version}/builds/{args.papermc_build}/downloads/{jar_name}"
 
 # Check if the latest build is already downloaded.
-if os.path.isfile(jar_name):
+if isfile(jar_name):
     print(f"You are already on the latest build for Minecraft {args.mc_version}")
-    sys.exit(0)
+    exit(0)
 
 # Delete old JAR.
-for file in os.listdir():
+for file in listdir():
     if file.startswith("paper") and file.endswith(".jar"):
-        os.remove(file)
+        remove(file)
 
 # Download the latest build of PaperMC.
 with urlopen(download_url) as response, open(jar_name, "wb") as f:
@@ -101,43 +107,41 @@ with urlopen(download_url) as response, open(jar_name, "wb") as f:
         "\n"
     )
 
-    update_script_path = os.path.join(server_name, "update.py")
+    update_script_path = join(server_name, "update.py")
     with open(update_script_path, "w") as f:
         f.write(update_script)
     # Make the script executable.
-    os.chmod(update_script_path, os.stat(update_script_path).st_mode | stat.S_IEXEC)
+    chmod(update_script_path, stat(update_script_path).st_mode | S_IEXEC)
 
     start_script = """
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
-import glob
-import os
-import subprocess
+from glob import glob
+from os.path import join
+from subprocess import run
 
 # Check if there is an update and if so, update the server JAR.
-subprocess.run([os.path.join(".", "update.py"), "--mc-version", "{mc_version}"])
+run([join(".", "update.py"), "--mc-version", "{mc_version}"])
 
 # Start PaperMC.
-papermc_jar = glob.glob("paper*.jar")[0]
-subprocess.run(["java", "-Xms512M", "-Xmx4G", "-jar", papermc_jar, "nogui"])
+papermc_jar = glob("paper*.jar")[0]
+run(["java", "-Xms512M", "-Xmx4G", "-jar", papermc_jar, "nogui"])
 """.format(
-        mc_version=subprocess.run(
-            [os.path.join(".", server_name, "update.py"), "--check-latest", "mc-version"], stdout=subprocess.PIPE
-        )
+        mc_version=run([join(".", server_name, "update.py"), "--check-latest", "mc-version"], stdout=PIPE)
         .stdout.decode()
         .strip()
     ).lstrip(
         "\n"
     )
 
-    start_script_path = os.path.join(server_name, "start.py")
+    start_script_path = join(server_name, "start.py")
     with open(start_script_path, "w") as f:
         f.write(start_script)
     # Make the script executable.
-    os.chmod(start_script_path, os.stat(start_script_path).st_mode | stat.S_IEXEC)
+    chmod(start_script_path, stat(start_script_path).st_mode | S_IEXEC)
 
 
-parser = argparse.ArgumentParser(description="Setup or backup a Minecraft server.")
+parser = ArgumentParser(description="Setup or backup a Minecraft server.")
 
 action_options = parser.add_mutually_exclusive_group(required=True)
 action_options.add_argument("-n", "--new", action="store_true", help="Create a new server")
@@ -149,28 +153,33 @@ args = parser.parse_args()
 
 if args.new:
     # Check if the server given exists.
-    if os.path.exists(args.server_name):
+    if exists(args.server_name):
         print(f"A server with the name '{args.server_name}' already exists.")
-        sys.exit(1)
+        exit(1)
 
     # Create the server directory and add the custom scripts.
-    os.makedirs(args.server_name, exist_ok=True)
+    makedirs(args.server_name, exist_ok=True)
     add_scripts(args.server_name)
 
 elif args.backup:
     # Check if the server given exists.
-    if not os.path.exists(args.server_name):
+    if not exists(args.server_name):
         print(f"A server with the name '{args.server_name}' does not exist.")
         print("Please check the spelling and try again.")
-        sys.exit(1)
+        exit(1)
 
     # Define the backup location.
-    current_date = datetime.datetime.now().strftime("yyyy-MM-dd_HH-mm-ss")
-    backup_location = f"{args.server_name}/backup/{current_date}.7z"
+    if args.server_name[-1] in ["/", "\\"]:
+        args.server_name = args.server_name[:-1]
+    current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    backup_location = join(args.server_name, "backup")
+    makedirs(backup_location, exist_ok=True)
+    backup_path = join(backup_location, f"{current_date}.tar.xz")
 
     # Navigate to the server directory.
-    os.chdir(args.server_name)
-    subprocess.run(["7z", "a", os.path.join("..", backup_location), "./world", "./world_nether", "./world_the_end"])
+    chdir(args.server_name)
+
+    run(["tar", "-cvJf", join("..", backup_path), "./world", "./world_nether", "./world_the_end"])
 
     # Navigate back to the original directory.
-    os.chdir("..")
+    chdir("..")
