@@ -174,15 +174,13 @@ server_options.add_argument(
 )
 server_options.add_argument("-n", "--new", action="store_true", help="Create a new server")
 server_options.add_argument("-b", "--backup", action="store_true", help="Backup an existing server")
+server_options.add_argument("-d", "--delete", action="store_true", help="Delete an existing server")
 
 parser.add_argument("-y", action="store_true", help="Answer yes to all prompts")
-
+parser.add_argument("--list-sessions", action="store_true", help="List all running Minecraft server sessions")
 parser.add_argument(
     "server_name", nargs="?", help="The name of the Minecraft server to create or perform the action on"
 )
-server_options.add_argument("-d", "--delete", action="store_true", help="Delete an existing server")
-
-parser.add_argument("--list-sessions", action="store_true", help="List all running Minecraft server sessions")
 
 args = parser.parse_args()
 
