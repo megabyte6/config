@@ -273,9 +273,13 @@ elif args.delete:
         print("Please check the spelling and try again.")
         exit(1)
 
-    if not args.y and input(
-        f"Are you sure you want to delete '{args.server_name}'? This will delete the server backups as well. (y/N): "
-    ).lower() not in ["y", "yes"]:
+    try:
+        delete_confirmation = input(
+            f"Are you sure you want to delete '{args.server_name}'? This will delete the server backups as well. (y/N): "
+        )
+    except KeyboardInterrupt:
+        exit(0)
+    if not args.y and delete_confirmation.lower() not in ["y", "yes"]:
         exit(0)
 
     # Delete the server directory.
