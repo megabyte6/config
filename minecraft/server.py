@@ -245,15 +245,23 @@ elif args.backup:
     # Define the backup location.
     if args.server_name[-1] in ["/", "\\"]:
         args.server_name = args.server_name[:-1]
-    current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    backup_location = join(args.server_name, "backup")
-    makedirs(backup_location, exist_ok=True)
-    backup_path = join(backup_location, f"{current_date}.tar.xz")
 
     # Navigate to the server directory.
     chdir(args.server_name)
 
-    run(["tar", "-cvJf", join("..", backup_path), "./world", "./world_nether", "./world_the_end"])
+    world_directories = ["world", "world_nether", "world_the_end"]
+    # Make sure the world save directories exist.
+    for directory in world_directories:
+        if not exists(directory):
+            print(f"Could not find a world save at '{directory}' in '{args.server_name}'.")
+            exit(1)
+
+    current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    backup_directory = "backup"
+    makedirs(backup_directory, exist_ok=True)
+    backup_path = join(backup_directory, f"{current_date}.tar.xz")
+
+    run(["tar", "-cvJf", backup_path, *world_directories])
 
     # Navigate back to the original directory.
     chdir("..")
