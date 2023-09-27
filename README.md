@@ -36,7 +36,6 @@
 | ~~[setup.sh](https://raw.githubusercontent.com/megabyte6/config/main/archive/ubuntu/setup.sh)~~ | Setup script for a fresh install of Ubuntu | **Not maintained** |
 
 ## vscode
-| File | Description | Notes |
-| --- | --- | --- |
-| ~~[eclipse-java-google-style.xml](https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml)~~ | Original formatter settings | **Not maintained** |
-| ~~[custom-eclipse-java-google-style.xml](https://raw.githubusercontent.com/megabyte6/config/main/archive/vscode/custom-eclipse-java-google-style.xml)~~ | Custom formatter settings | **Not maintained** |
+| File | Description |
+| --- | --- |
+| [eclipse-java-google-style.xml](https://raw.githubusercontent.com/megabyte6/config/main/vscode/eclipse-java-google-style.xml) | Custom formatter settings for Java in VSCode. Original formatter settings can be found [here](https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml) |
