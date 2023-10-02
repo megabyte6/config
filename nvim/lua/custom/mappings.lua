@@ -4,7 +4,7 @@ local M = {}
 
 M.copilot = {
   i = {
-    ["C-l"] = {
+    ["<C-l>"] = {
       function()
         vim.fn.feedkeys(vim.fn["copilot#Accept"](), "")
       end,
