@@ -1,0 +1,48 @@
+#!/usr/bin/env python
+
+from argparse import ArgumentParser
+from os.path import join
+from subprocess import run
+
+
+def write_service_file(file_path: str, charge_threshold: str = 100):
+    with open(file_path, "w") as f:
+        f.write(
+            f"""[Unit]
+Description=Set Battery Charge Threshold
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c 'echo {charge_threshold} > /sys/class/power_supply/BAT?/charge_control_end_threshold'
+
+[Install]
+WantedBy=multi-user.target
+"""
+        )
+
+
+def main():
+    parser = ArgumentParser(description="Set battery charge threshold on ASUS Laptops running Linux.")
+    parser.add_argument("threshold", type=int, help="The battery charge threshold.")
+    parser.add_argument("-q", "--quiet", action="store_true", help="Suppress output.")
+    args = parser.parse_args()
+
+    # Threshold is a percentage, so it must be between 0 and 100.
+    if args.threshold < 0 or args.threshold > 100:
+        parser.error("Threshold must be between 0 and 100.")
+
+    service_name = "limit-battery.service"
+    write_service_file(file_path=join("/", "etc", "systemd", "system", service_name), charge_threshold=args.threshold)
+
+    # In case this is not the first time running this script, reload the daemon to use the new service file.
+    if not args.quiet:
+        print("Reloading systemd daemon...")
+    run(["sudo", "systemctl", "daemon-reload"])
+    if not args.quiet:
+        print(f"Enabling and starting {service_name}...")
+    run(["sudo", "systemctl", "enable", "--now", service_name])
+
+
+if __name__ == "__main__":
+    main()

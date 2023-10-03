@@ -4,6 +4,14 @@
 
 `config` is a repo to host my configuration files for things.
 
+### linux
+
+#### asus
+
+| File                                                                                              | Description                                                                                                                      | Notes                                                                                        |
+| ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| [limit-battery](https://raw.githubusercontent.com/megabyte6/config/main/linux/asus/limit-battery) | A Python script used to set the battery's charge threshold for ASUS Laptops since the MyASUS utility is not available for Linux. | To run, copy the file to `/usr/local/bin/` and run `sudo limit-battery <max charge percent>` |
+
 ### minecraft
 
 | File                                                                                                   | Description                                                                                                         | Notes                                                                                                                      |
