@@ -22,6 +22,16 @@ WantedBy=multi-user.target
         )
 
 
+def start_service(service_name: str, verbose: bool = False):
+    # In case this is not the first time running this script, reload the daemon to use the new service file.
+    if verbose:
+        print("Reloading systemd daemon...")
+    run(["sudo", "systemctl", "daemon-reload"])
+    if verbose:
+        print(f"Enabling and starting {service_name}...")
+    run(["sudo", "systemctl", "enable", "--now", service_name])
+
+
 def main():
     parser = ArgumentParser(description="Set battery charge threshold on ASUS Laptops running Linux.")
     parser.add_argument("threshold", type=int, help="The battery charge threshold.")
@@ -35,13 +45,7 @@ def main():
     service_name = "limit-battery.service"
     write_service_file(file_path=join("/", "etc", "systemd", "system", service_name), charge_threshold=args.threshold)
 
-    # In case this is not the first time running this script, reload the daemon to use the new service file.
-    if not args.quiet:
-        print("Reloading systemd daemon...")
-    run(["sudo", "systemctl", "daemon-reload"])
-    if not args.quiet:
-        print(f"Enabling and starting {service_name}...")
-    run(["sudo", "systemctl", "enable", "--now", service_name])
+    start_service(service_name=service_name, verbose=not args.quiet)
 
 
 if __name__ == "__main__":
