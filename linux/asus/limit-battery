@@ -38,9 +38,9 @@ def main():
     parser.add_argument("-q", "--quiet", action="store_true", help="Suppress output.")
     args = parser.parse_args()
 
-    # Threshold is a percentage, so it must be between 0 and 100.
-    if args.threshold < 0 or args.threshold > 100:
-        parser.error("Threshold must be between 0 and 100.")
+    # Threshold is a percentage, so it must be either 60, 80, or 100.
+    if args.threshold not in [60, 80, 100]:
+        parser.error("Threshold must be either 60, 80, or 100.")
 
     service_name = "limit-battery.service"
     write_service_file(file_path=join("/", "etc", "systemd", "system", service_name), charge_threshold=args.threshold)
