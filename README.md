@@ -8,9 +8,10 @@
 
 #### asus
 
-| File                                                                                              | Description                                                                                                                      | Notes                                                                                        |
-| ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| [limit-battery](https://raw.githubusercontent.com/megabyte6/config/main/linux/asus/limit-battery) | A Python script used to set the battery's charge threshold for ASUS Laptops since the MyASUS utility is not available for Linux. | To run, copy the file to `/usr/local/bin/` and run `sudo limit-battery <max charge percent>` |
+| File                                                                                                      | Description                                                                                                                      | Notes                                                                                                              |
+| --------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| [limit-battery.py](https://raw.githubusercontent.com/megabyte6/config/main/linux/asus/limit-battery) | A Python script used to set the battery's charge threshold for ASUS laptops since the MyASUS utility is not available for Linux. | To run, make sure this script is set to auto-run with the system. Then, run `sudo visudo` and add `yourusername ALL=(ALL) NOPASSWD: /bin/sh -c echo * > /sys/class/power_supply/BAT0/charge_control_end_threshold` where yourusername is replaced with your username.
+| ~~[limit-battery](https://raw.githubusercontent.com/megabyte6/config/main/archive/linux/asus/limit-battery)~~ | A Python script used to set the battery's charge threshold for ASUS Laptops since the MyASUS utility is not available for Linux. | **Not maintained**<br>To run, copy the file to `/usr/local/bin/` and run `sudo limit-battery <max charge percent>` |
 
 ### minecraft
 
