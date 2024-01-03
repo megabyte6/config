@@ -5,11 +5,10 @@ Script Name: server.py
 Author: Brayden Chan
 Date Created: 2023-08-24
 Date Modified: 2023-09-24
-Description: A script to setup and manage Minecraft servers.
+Description: A script to set up and manage Minecraft servers.
 
 Dependencies:
     - Python 3.6+
-    - Linux
     - tmux
 
 Version: 1.1
