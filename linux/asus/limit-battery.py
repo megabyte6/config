@@ -1,21 +1,39 @@
 #!/usr/bin/env python
 
+import os
 import subprocess
+import sys
 import time
+
+
+def already_running(pid_file_path: str) -> bool:
+    if os.path.isfile(pid_file_path):
+        with open(pid_file_path, "r") as f:
+            daemon_pid = int(f.read().strip())
+            try:
+                os.kill(daemon_pid, 0)
+            except OSError:
+                return False
+            else:
+                return True
+    else:
+        return False
 
 
 def charging_state() -> bool:
     with open("/sys/class/power_supply/BAT0/status", "r") as f:
         state = f.read().strip()
-        if state in ["Charging", "Not charging"]:
+        if state in ["Charging", "Not charging", "Full"]:
             return True
         elif state == "Discharging":
             return False
         else:
-            raise ValueError(f"Unknown state: {state} in /sys/class/power_supply/BAT0/status")
+            raise ValueError(
+                f"Unknown state: {state} in /sys/class/power_supply/BAT0/status"
+            )
 
 
-def get_requested_charge_limit() -> int:
+def request_charge_limit() -> int:
     option = subprocess.check_output(
         [
             "notify-send",
@@ -48,17 +66,25 @@ def set_charge_limit(charge_limit: int) -> None:
 
 
 if __name__ == "__main__":
+    pid_file_path = "/tmp/limit-battery.pid"
+    if already_running(pid_file_path):
+        print("Already running")
+        sys.exit(0)
+
+    with open(pid_file_path, "w") as f:
+        f.write(str(os.getpid()))
+
     old_state = charging_state()
 
     while True:
-        time.sleep(1)
+        time.sleep(5)
         new_state = charging_state()
 
         if old_state == new_state:
             continue
 
         if new_state:
-            set_charge_limit(get_requested_charge_limit())
+            set_charge_limit(request_charge_limit())
         else:
             set_charge_limit(100)
 
