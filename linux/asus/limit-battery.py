@@ -32,6 +32,8 @@ def get_requested_charge_limit() -> int:
         return 60
     elif int(option) == 1:
         return 80
+    else:
+        raise ValueError(f"Unknown option: {option}")
 
 
 def set_charge_limit(charge_limit: int) -> None:
