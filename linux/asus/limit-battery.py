@@ -77,7 +77,7 @@ if __name__ == "__main__":
     old_state = charging_state()
 
     while True:
-        time.sleep(5)
+        time.sleep(1)
         new_state = charging_state()
 
         if old_state == new_state:
