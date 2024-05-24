@@ -10,6 +10,7 @@ Description: A script to set up and manage Minecraft servers.
 Dependencies:
     - Python 3.6+
     - tmux
+    - tar or 7z
 
 Version: 1.1
 
@@ -31,8 +32,9 @@ from datetime import datetime
 def add_scripts(server_name):
     """
     Add custom scripts to the server directory.
-    :param server_name: The name of the server to add the scripts to.
-    :return: None
+
+    Args:
+        server_name (str): The name of the server to add the scripts to.
     """
 
     if sys.executable.endswith("python3"):
@@ -42,7 +44,7 @@ def add_scripts(server_name):
 
     update_script = (
         f"#!/usr/bin/env {python_executable}\n\n"
-        + """
+        """
 import json
 import os
 import sys
