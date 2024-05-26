@@ -249,10 +249,6 @@ if len(sys.argv) == 1:
     print("run with '-h' to get help")
     sys.exit()
 
-if args.compression and not args.backup:
-    print("The '--compression' option requires '-b' or '--backup' to be used.")
-    sys.exit()
-
 if is_linux() and args.list_sessions:
     sessions = subprocess.run(
         [
