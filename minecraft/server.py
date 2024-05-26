@@ -4,15 +4,15 @@
 Script Name: server.py
 Author: Brayden Chan
 Date Created: 2023-08-24
-Date Modified: 2023-09-24
+Date Modified: 2024-05-26
 Description: A script to set up and manage Minecraft servers.
 
 Dependencies:
     - Python 3.6+
     - tmux
-    - tar or 7z
+    - tar (or 7z if compressing to .7z)
 
-Version: 1.1
+Version: 2.0
 
 License: This file is licensed under the MIT License. See LICENSE for more information.
 
@@ -198,7 +198,23 @@ if not is_windows() and not is_macos() and not is_linux():
     print("Unsupported operating system.")
     exit(1)
 
+compression_file_extensions = {
+    "7z": "7z",
+    "gzip": "tar.gz",
+    "bzip2": "tar.bz2",
+    "xz": "tar.xz",
+    "lzip": "tar.lz",
+    "lzma": "tar.lzma",
+    "lzop": "tar.lzo",
+    "zstd": "tar.zst",
+    "compress": "tar.Z",
+}
+
 parser = ArgumentParser(description="Setup or backup a Minecraft server.")
+
+parser.add_argument(
+    "server_name", nargs="?", help="The name of the Minecraft server to create or perform the action on"
+)
 
 parser.add_argument("-y", action="store_true", help="Answer yes to all prompts")
 if is_linux():
@@ -214,7 +230,10 @@ server_options.add_argument("-d", "--delete", action="store_true", help="Delete 
 if is_linux():
     parser.add_argument("--list-sessions", action="store_true", help="List all running Minecraft server sessions")
 parser.add_argument(
-    "server_name", nargs="?", help="The name of the Minecraft server to create or perform the action on"
+    "--compression",
+    choices=compression_file_extensions.keys(),
+    default="xz",
+    help="Specify the compression type. Uses 'xz' with the tar utility by default. Requires '-b' or '--backup' to be used.",
 )
 parser.add_argument(
     "--world-name",
@@ -228,6 +247,10 @@ args = parser.parse_args()
 if len(sys.argv) == 1:
     parser.print_usage()
     print("run with '-h' to get help")
+    sys.exit()
+
+if args.compression and not args.backup:
+    print("The '--compression' option requires '-b' or '--backup' to be used.")
     sys.exit()
 
 if is_linux() and args.list_sessions:
@@ -270,9 +293,6 @@ elif args.backup:
     if args.server_name[-1] in ["/", "\\"]:
         args.server_name = args.server_name[:-1]
 
-    # Navigate to the server directory.
-    # os.chdir(args.server_name)
-
     world_saves = [
         os.path.join(args.server_name, args.world_name),
         os.path.join(args.server_name, f"{args.world_name}_nether"),
@@ -287,12 +307,12 @@ elif args.backup:
     current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     backup_directory = os.path.join(args.server_name, "backup")
     os.makedirs(backup_directory, exist_ok=True)
-    backup_path = os.path.join(backup_directory, f"{current_date}.tar.xz")
+    backup_path = os.path.join(backup_directory, f"{current_date}.{compression_file_extensions[args.compression]}")
 
-    subprocess.run(["tar", "-cvJf", backup_path, *world_saves])
-
-    # Navigate back to the original directory.
-    # os.chdir("..")
+    if args.compression == "7z":
+        subprocess.run(["7z", "a", backup_path, *world_saves])
+    else:
+        subprocess.run(["tar", "--create", "--verbose", "--auto-compress", "--file", backup_path, *world_saves])
 
 elif args.delete:
     # Check if the server given exists.
