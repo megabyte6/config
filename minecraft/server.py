@@ -289,6 +289,8 @@ elif args.backup:
     if args.server_name[-1] in ["/", "\\"]:
         args.server_name = args.server_name[:-1]
 
+    os.chdir(args.server_name)
+
     world_saves = [
         args.world_name,
         f"{args.world_name}_nether",
@@ -304,8 +306,6 @@ elif args.backup:
     backup_directory = "backup"
     os.makedirs(backup_directory, exist_ok=True)
     backup_path = os.path.join(backup_directory, f"{current_date}.{compression_file_extensions[args.compression]}")
-
-    os.chdir(args.server_name)
 
     if args.compression == "7z":
         subprocess.run(["7z", "a", backup_path, *world_saves])
