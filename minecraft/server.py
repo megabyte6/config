@@ -290,25 +290,29 @@ elif args.backup:
         args.server_name = args.server_name[:-1]
 
     world_saves = [
-        os.path.join(args.server_name, args.world_name),
-        os.path.join(args.server_name, f"{args.world_name}_nether"),
-        os.path.join(args.server_name, f"{args.world_name}_the_end"),
+        args.world_name,
+        f"{args.world_name}_nether",
+        f"{args.world_name}_the_end",
     ]
     # Make sure the world save directories exist.
     for directory in world_saves:
         if not os.path.exists(directory):
-            print(f"Could not find a world save at '{directory}'")  # in '{args.server_name}'.")
+            print(f"Could not find a world save at '{directory}' in '{args.server_name}'.")
             sys.exit(1)
 
     current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    backup_directory = os.path.join(args.server_name, "backup")
+    backup_directory = "backup"
     os.makedirs(backup_directory, exist_ok=True)
     backup_path = os.path.join(backup_directory, f"{current_date}.{compression_file_extensions[args.compression]}")
+
+    os.chdir(args.server_name)
 
     if args.compression == "7z":
         subprocess.run(["7z", "a", backup_path, *world_saves])
     else:
         subprocess.run(["tar", "--create", "--verbose", "--auto-compress", "--file", backup_path, *world_saves])
+
+    os.chdir("..")
 
 elif args.delete:
     # Check if the server given exists.
