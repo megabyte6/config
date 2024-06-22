@@ -10,7 +10,7 @@ Description: A script to set up and manage Minecraft servers.
 Dependencies:
     - Python 3.6+
     - tmux
-    - tar (or 7z if compressing to .7z)
+    - 7z (or tar if compressing to any .tar.* file)
 
 Version: 2.1
 
@@ -242,8 +242,8 @@ if is_linux():
 parser.add_argument(
     "--compression",
     choices=compression_file_extensions.keys(),
-    default="xz",
-    help="Specify the compression type. Uses 'xz' with the tar utility by default. Requires '-b' or '--backup' to be used.",
+    default="7z",
+    help="Specify the compression type. Uses '7z' by default. Requires '-b' or '--backup' to be used.",
 )
 parser.add_argument(
     "--world-name",
