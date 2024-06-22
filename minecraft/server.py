@@ -67,33 +67,38 @@ def fetch_json(url: str):
         return json.load(response)
 
 
-parser = ArgumentParser(description="Update a PaperMC Minecraft server.")
+parser = ArgumentParser(description="Update a PaperMC Minecraft server JAR.")
 parser.add_argument(
     "--mc-version",
-    default="-1",
+    default=None,
     help="Specify the Minecraft version. Default is the latest available version.",
 )
 parser.add_argument(
     "--papermc-build",
     type=int,
-    default=-1,
+    default=None,
     help="Specify the PaperMC build version. Default is the latest available build.",
 )
 parser.add_argument(
     "--check-latest",
     choices=["all", "mc-version", "papermc-build"],
-    help="Check the latest Minecraft version or the latest PaperMC build.",
+    help="Check the latest Minecraft version or the latest PaperMC build",
+)
+parser.add_argument(
+    "--quiet",
+    action="store_true",
+    help="Suppress output",
 )
 
 args = parser.parse_args()
 
 # Find the latest Minecraft version if it is not specified.
-if args.mc_version == "-1":
+if not args.mc_version:
     mc_versions_url = "https://api.papermc.io/v2/projects/paper"
     args.mc_version = fetch_json(mc_versions_url)["versions"][-1]
 
 # Find the latest PaperMC build if it is not specified.
-if args.papermc_build == -1:
+if not args.papermc_build:
     papermc_builds_url = f"https://api.papermc.io/v2/projects/paper/versions/{args.mc_version}/builds"
     args.papermc_build = fetch_json(papermc_builds_url)["builds"][-1]["build"]
 
@@ -117,15 +122,20 @@ download_url = f"https://api.papermc.io/v2/projects/paper/versions/{args.mc_vers
 
 # Check if the latest build is already downloaded.
 if os.path.isfile(jar_name):
-    print(f"You are already on the latest build for Minecraft {args.mc_version}")
+    if not args.quiet:
+        print(f"You are already on the latest build for Minecraft {args.mc_version}")
     sys.exit()
 
 # Delete old JAR.
 for file in os.listdir():
     if file.startswith("paper") and file.endswith(".jar"):
+        if not args.quiet:
+            print(f"Deleting old JAR: {file}")
         os.remove(file)
 
 # Download the latest build of PaperMC.
+if not args.quiet:
+    print(f"Downloading PaperMC {args.mc_version} build {args.papermc_build}...")
 with urllib.request.urlopen(download_url) as response, open(jar_name, "wb") as f:
     f.write(response.read())
 """.lstrip(
