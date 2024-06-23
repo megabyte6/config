@@ -12,7 +12,7 @@ Dependencies:
     - tmux
     - 7z (or tar if compressing to any .tar.* file)
 
-Version: 2.1
+Version: 2.2
 
 License: This file is licensed under the MIT License. See LICENSE for more information.
 
