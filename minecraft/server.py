@@ -4,7 +4,7 @@
 Script Name: server.py
 Author: Brayden Chan
 Date Created: 2023-08-24
-Date Modified: 2024-05-26
+Date Modified: 2024-06-22
 Description: A script to set up and manage Minecraft servers.
 
 Dependencies:
@@ -175,7 +175,10 @@ import os.path
 import subprocess
 
 # Check if there is an update and if so, update the server JAR.
-subprocess.run([os.path.join(".", "update.py"), "--mc-version", "{mc_version}"])
+update_args = [os.path.join(".", "update.py"), "--mc-version", "{mc_version}"]
+if "win" in sys.platform:
+    update_args.insert(0, "py")
+subprocess.run(update_args)
 
 # Start PaperMC.
 papermc_jar = glob.glob("paper*.jar")[0]
