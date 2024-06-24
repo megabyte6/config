@@ -4,7 +4,7 @@
 Script Name: server.py
 Author: Brayden Chan
 Date Created: 2023-08-24
-Date Modified: 2024-06-22
+Date Modified: 2024-06-23
 Description: A script to set up and manage Minecraft servers.
 
 Dependencies:
@@ -12,7 +12,7 @@ Dependencies:
     - tmux
     - 7z (or tar if compressing to any .tar.* file)
 
-Version: 2.2
+Version: 2.3
 
 License: This file is licensed under the MIT License. See LICENSE for more information.
 
@@ -173,6 +173,7 @@ with urllib.request.urlopen(download_url) as response, open(jar_name, "wb") as f
 import glob
 import os.path
 import subprocess
+import sys
 
 # Check if there is an update and if so, update the server JAR.
 update_args = [os.path.join(".", "update.py"), "--mc-version", "{mc_version}"]
